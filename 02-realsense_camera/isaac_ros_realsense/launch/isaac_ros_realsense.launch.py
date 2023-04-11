@@ -73,7 +73,7 @@ def generate_launch_description():
                     'enable_slam_visualization': True,
                     'enable_landmarks_view': True,
                     'enable_observations_view': True,
-                    'enable_imu': True,
+                    'enable_imu': False,
                     'map_frame': 'map',
                     'odom_frame': 'odom',
                     'base_frame': 'base_link',

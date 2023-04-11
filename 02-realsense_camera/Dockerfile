@@ -22,7 +22,22 @@
 ARG BASE_IMAGE="rbonghi/isaac-ros-tutorial:isaac-ros-base"
 FROM ${BASE_IMAGE}
 
-################ INSTALL REALSENSE #######################
+################ INSTALL VPI DEPENDANCIES #################
+
+RUN apt-get update && \
+    apt-get install -y \
+    libnvbuf_utils\
+    libnvmedia \
+    libnvrm \
+    libnvtvmr \
+    libnvos \
+    libEGL_nvidia \
+    libcudart \
+    libcuda \
+    libcufft && \
+    rm -rf /var/lib/apt/lists/*
+
+################ INSTALL REALSENSE ########################
 
 # Install Realsense
 RUN apt-get update && \
@@ -49,6 +64,10 @@ ARG ROSINSTALL=realsense_camera.rosinstall
 # Copy wstool rosinstall
 COPY ${ROSINSTALL} ${ROSINSTALL}
 
+RUN apt-get update && \
+    apt-get install -y libnvtt-dev && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN mkdir -p ${ISAAC_ROS_WS}/src && \
     vcs import ${ISAAC_ROS_WS}/src < ${ROSINSTALL}
 # Pull LFS files
@@ -60,7 +79,9 @@ RUN cd ${ISAAC_ROS_WS}/src/isaac_ros_common && git lfs pull && \
 WORKDIR $ISAAC_ROS_WS
 
 # Build Isaac ROS
-RUN . /opt/ros/$ROS_DISTRO/install/setup.sh && \
+RUN apt-get update && \
+    . /opt/ros/$ROS_DISTRO/install/setup.sh && \
+    rosdep install -y --ignore-src --from-paths src --rosdistro foxy && \
     colcon build --symlink-install \
     --cmake-args \
     -DCMAKE_BUILD_TYPE=Release

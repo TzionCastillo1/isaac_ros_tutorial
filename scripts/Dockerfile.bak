@@ -97,11 +97,8 @@ RUN apt-get update && \
     apt-get install python3-vcstool python3-pip -y && \
     mkdir -p ${ROS_ROOT}/src && \
     vcs import ${ROS_ROOT}/src < ${ROSINSTALL} && \
-    rm -rf /${ROS_ROOT}/src/xacro/CMakeLists.txt && \
     rm -rf /var/lib/apt/lists/*
-
-COPY CMakeLists.txt ${ROS_ROOT}/src/xacro
-RUN apt-get update && \
+RUN apt-get update &&\
     . /opt/ros/$ROS_DISTRO/install/setup.sh && \
     cd ${ROS_ROOT} && \
     rosdep install -y --ignore-src --from-paths src --rosdistro foxy && \

@@ -97,41 +97,11 @@ RUN apt-get update && \
     apt-get install python3-vcstool python3-pip -y && \
     mkdir -p ${ROS_ROOT}/src && \
     vcs import ${ROS_ROOT}/src < ${ROSINSTALL} && \
-    rm -rf /${ROS_ROOT}/src/xacro/CMakeLists.txt && \
     rm -rf /var/lib/apt/lists/*
-
-COPY CMakeLists.txt ${ROS_ROOT}/src/xacro
-RUN apt-get update && \
+RUN apt-get update &&\
     . /opt/ros/$ROS_DISTRO/install/setup.sh && \
     cd ${ROS_ROOT} && \
-    rosdep install -y --ignore-src --from-paths src --rosdistro foxy && \
-    colcon build --merge-install --packages-up-to pcl_conversions sensor_msgs_py diagnostic_updater xacro \
-    camera_calibration_parsers image_transport image_common camera_info_manager && \
-    rm -Rf src logs build
-
-# Install gcc8 for cross-compiled binaries from Ubuntu 20.04
-RUN apt-get update && \
-    add-apt-repository -y ppa:ubuntu-toolchain-r/test && \
-    apt-get install -y gcc-8 g++-8 libstdc++6 && \
-    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8 && \
-    update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8 && \
-    rm -rf /usr/bin/aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-g++ \
-        /usr/bin/aarch64-linux-gnu-g++-7 /usr/bin/aarch64-linux-gnu-gcc-7 && \
-    update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc \
-        /usr/bin/gcc-8 8 && \
-    update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ \
-        /usr/bin/g++-8 8 && \
-    rm -rf /var/lib/apt/lists/*
-
-################ Final enviroment setup ####################
-
-# Restore using the default Foxy DDS middleware: FastRTPS
-ENV RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-
-# source ros package from entrypoint
-RUN sed --in-place --expression \
-      '$isource "$ROS_ROOT/install/setup.bash"' \
-      /ros_entrypoint.sh
+    rosdep install -y --ignore-src --from-paths src --rosdistro foxy 
 
 # https://docs.docker.com/engine/reference/builder/#stopsignal
 # https://hynek.me/articles/docker-signals/
