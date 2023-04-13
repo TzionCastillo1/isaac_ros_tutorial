@@ -44,8 +44,8 @@ You will be able to see the an output like
 # Notes
 This fork contains modification that were necessary to build on my Jetson Nano.
 These included:
-*Adding Public keys for repositories
-*Modifying xacro to be able to build (1)
+* Adding Public keys for repositories
+* Modifying xacro to be able to build (1)
 
 (1) xacro threw the error: 
 ```CMake Error at /opt/ros/foxy/install/share/ament_cmake_python/cmake/ament_python_install_package.cmake:34 (message):
