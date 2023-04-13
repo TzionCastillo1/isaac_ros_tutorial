@@ -24,23 +24,24 @@ FROM ${BASE_IMAGE}
 
 ################ INSTALL VPI DEPENDANCIES #################
 
-RUN apt-get update && \
-    apt-get install -y \
-    libnvbuf_utils\
-    libnvmedia \
-    libnvrm \
-    libnvtvmr \
-    libnvos \
-    libEGL_nvidia \
-    libcudart \
-    libcuda \
-    libcufft && \
-    rm -rf /var/lib/apt/lists/*
+#RUN apt-get update && \
+#    apt-get install -y \
+#    libnvbuf_utils\
+#    libnvmedia \
+#    libnvrm \
+#    libnvtvmr \
+#    libnvos \
+#    libEGL_nvidia \
+#    libcudart \
+#    libcuda \
+#    libcufft && \
+#    rm -rf /var/lib/apt/lists/*
 
 ################ INSTALL REALSENSE ########################
 
 # Install Realsense
-RUN apt-get update && \
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-key 42D5A192B819C5DA && \
+    apt-get update && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE && \
     add-apt-repository -y "deb https://librealsense.intel.com/Debian/apt-repo $(lsb_release -cs) main" -u && \
