@@ -105,6 +105,8 @@ RUN . /opt/ros/$ROS_DISTRO/install/setup.sh && \
     --cmake-args \
     -DCMAKE_BUILD_TYPE=Release
 
+#COPY install_realsense.sh ${ROS_WS}/install_realsense.sh
+#RUN bash ${ROS_WS}/install_realsense.sh
 ################ Final enviroment setup ####################
 
 # source ros package from entrypoint
@@ -113,4 +115,4 @@ RUN sed --in-place --expression \
       /ros_entrypoint.sh
 
 # run ros package launch file
-CMD ["ros2", "launch", "isaac_ros_realsense", "isaac_ros_realsense.launch.py"]
+#CMD ["ros2", "launch", "isaac_ros_realsense", "isaac_ros_realsense.launch.py"]

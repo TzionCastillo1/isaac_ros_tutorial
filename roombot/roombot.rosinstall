@@ -1,0 +1,9 @@
+-git:
+    local-name: create_robot
+    uri: https://github.com/AutonomyLab/create_robot.git
+    version: foxy
+-git:
+    local-name: libcreate
+    uri: https://github.com/AutonomyLab/libcreate
+    version: master
+

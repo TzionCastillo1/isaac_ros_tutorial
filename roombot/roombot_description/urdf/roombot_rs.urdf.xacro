@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<robot name="roombot_rs" xmlns:xacro="http://ros.org/wiki/xacro">
+	<xacro:include filename="$(find create_description)/urdf/create_base.urdf.xacro" />
+	<xacro:include filename="$(find create_description)/urdf/create_2_gazebo.urdf.xacro" />
+
+	<xacro:arg name="use_nominal_extrinsics" default="false"/>
+	<xacro:arg name="add_plug" default="false" />
+	<xacro:arg name="use_mesh" default="true" />
+	<xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
+
+	<xacro:create_base wheel_seperation="0.235" base_diameter="0.3485">
+		<mesh filename="package://create_description/meshes/create_2.dae" />
+	</xacro:create_base>
+
+	<xacro:sensor_d435 parent="base_link" use_nominal_extrinsics="$(arg use_nominal_extrinsics)" add_plug="$(arg add_plug)" use_mesh="$(arg use_mesh)">
+		<origin xyz="0 0 0" rpy="0 0 0"/>
+	</xacro:sensor_d435>
+</robot>
