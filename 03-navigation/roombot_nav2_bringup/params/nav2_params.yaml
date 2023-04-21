@@ -1,0 +1,44 @@
+planner_server:
+  ros__parameters:
+    planner_plugins: ['GridBased']
+    GridBased:
+      plugin: 'nav2_navfn_planner/NavfnPlanner'
+
+controller_server_rclcpp_node:
+  ros__parameters:
+    use_sim_time: False
+
+controller_server:
+  ros__parameters:
+    controller_plugins: ["FollowPath"]
+    FollowPath:
+      plugin: "dwb_core::DWBLocalPlanner"
+
+waypoint_follower:
+  ros__parameters:
+    loop_rate: 20
+    stop_on_failure: False
+    waypoint_task_execturo_plugin: "wait_at_waypoint"
+    wait_at_waypoint:
+      plugin: "nav2_waypoint_follower::WaitAtWaypoint"
+      enabled: True
+      waypoint_pause_duration: 200
+
+cmd_vel_mux_node:
+  ros__parameters:
+    subscribers:
+      joystick_teleop:
+        topic:          "input/joy"
+        timeout:        0.1
+        priority:       6
+        short_desc:     "Joystick Teleoperation"
+      nav2_stack:
+        topic:          "input/navigation"
+        timeout:        0.5
+        priority:       1
+        short_desc:     "Nav2 Stack Autonomous Controller"
+      default_input:
+        topic:          "input/default"
+        timeout:        0.1
+        priority:       0
+        short_desc:     "The default cmd_vel (usually the zero command)"

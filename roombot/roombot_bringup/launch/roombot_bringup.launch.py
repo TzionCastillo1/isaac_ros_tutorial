@@ -1,16 +1,17 @@
-import os
-import launch
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import ComposableNodeContainer, Node
 from launch_ros.descriptions import ComposableNode
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
 
+import os
+import launch
 import xacro
 import tempfile
 
-def to_urdf(xacro_path parameters=None):def to_urdf(xacro_path, parameters=None):
+def to_urdf(xacro_path, parameters=None):
     """Convert the given xacro file to URDF file.
     * xacro_path -- the path to the xacro file
     * parameters -- to be used when xacro file is parsed.
@@ -26,6 +27,24 @@ def to_urdf(xacro_path parameters=None):def to_urdf(xacro_path, parameters=None)
     return urdf_path
 
 def generate_launch_description():
+    roombot_config = os.path.join(
+            get_package_share_directory("roombot_bringup"),
+            "config",
+            "roombot.yaml"
+        )
+
+    roombot_config = DeclareLaunchArgument(
+            "roombot_config_file",
+            default_value=roombot_config,
+            description="Roombot ocnfiguration file"
+            )
+
+    create_driver = Node(
+        package="create_driver",
+        executable="create_driver",
+        name="create_driver",
+        parameters=[LaunchConfiguration("roombot_config_file")])
+
     """Launch file which brings up visual odometry node configured for RealSense."""
     realsense_camera_node = Node(
         package='realsense2_camera',
@@ -56,10 +75,10 @@ def generate_launch_description():
                     'enable_slam_visualization': True,
                     'enable_landmarks_view': True,
                     'enable_observations_view': True,
-                    'enable_imu': True,
+                    'enable_imu': False,
                     'map_frame': 'map',
                     'odom_frame': 'odom',
-                    'base_frame': 'base_link',
+                    'base_frame': 'base_footprint',
                     'input_imu_frame': 'camera_imu_optical_frame',
                     'input_left_camera_frame': 'camera_infra1_frame',
                     'input_right_camera_frame': 'camera_infra2_frame'
@@ -91,4 +110,4 @@ def generate_launch_description():
     xacro_path = os.path.join(get_package_share_directory('roombot_description'), 'urdf', 'roombot_rs.urdf.xacro')
     urdf = to_urdf(xacro_path, {'use_nominal_extrinsics' : 'true', 'add_plug' : 'true'})
 
-    return launch.LaunchDescription([roombot_description, vslam_launch_container, realsense_camera_node, model_node])
+    return launch.LaunchDescription([roombot_config, roombot_description, create_driver, vslam_launch_container, realsense_camera_node])

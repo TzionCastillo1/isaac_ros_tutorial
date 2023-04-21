@@ -10,3 +10,12 @@
     local-name: isaac_ros_visual_slam
     version: release-ea3
     uri: https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_visual_slam.git
+- git:
+    local-name: create_robot
+    uri: https://github.com/TzionCastillo1/create_robot.git
+    version: foxy
+- git:
+    local-name: libcreate
+    uri: https://github.com/AutonomyLab/libcreate
+    version: master
+
